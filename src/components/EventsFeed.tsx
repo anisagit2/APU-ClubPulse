@@ -7,15 +7,15 @@ import {
   Instagram,
   Bookmark,
   Share2,
-  ExternalLink,
   PlusCircle,
   Filter,
   Check,
-  CalendarPlus,
-  AlertCircle
+  CalendarPlus
 } from 'lucide-react';
 import { CampusEvent, EventCategory } from '../types';
 import { downloadIcsFile, getGoogleCalendarUrl } from '../utils/calendar';
+import { EventRegistrationModal } from './EventRegistrationModal';
+import { APU_CLUBS } from '../data/clubsData';
 
 interface EventsFeedProps {
   events: CampusEvent[];
@@ -39,6 +39,17 @@ export const EventsFeed: React.FC<EventsFeedProps> = ({
   const [selectedDateFilter, setSelectedDateFilter] = useState<'All' | 'This Week' | 'Hackathons'>('All');
   const [calendarMenuOpen, setCalendarMenuOpen] = useState<string | null>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [registrationEvent, setRegistrationEvent] = useState<CampusEvent | null>(null);
+  const [registeredEventIds, setRegisteredEventIds] = useState<Set<string>>(() => {
+    try {
+      const saved = localStorage.getItem('apu_registered_event_ids');
+      const ids: unknown = saved ? JSON.parse(saved) : [];
+      return new Set(Array.isArray(ids) ? ids.filter((id): id is string => typeof id === 'string') : []);
+    } catch (e) {
+      console.error(e);
+      return new Set();
+    }
+  });
 
   const categories: (EventCategory | 'All')[] = [
     'All',
@@ -84,6 +95,18 @@ export const EventsFeed: React.FC<EventsFeedProps> = ({
     navigator.clipboard.writeText(text);
     setCopiedId(event.id);
     setTimeout(() => setCopiedId(null), 2000);
+  };
+
+  const handleRegister = (eventId: string) => {
+    setRegisteredEventIds(prev => {
+      const next = new Set(prev).add(eventId);
+      try {
+        localStorage.setItem('apu_registered_event_ids', JSON.stringify(Array.from(next)));
+      } catch (e) {
+        console.error(e);
+      }
+      return next;
+    });
   };
 
   return (
@@ -195,6 +218,8 @@ export const EventsFeed: React.FC<EventsFeedProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredEvents.map(event => {
             const isSaved = savedEventIds.has(event.id);
+            const clubInstagramUrl =
+              APU_CLUBS.find(club => club.id === event.clubId)?.instagram || event.instagramUrl;
 
             return (
               <div
@@ -213,7 +238,7 @@ export const EventsFeed: React.FC<EventsFeedProps> = ({
                           {event.clubName}
                         </span>
                         <a
-                          href={event.instagramUrl}
+                          href={clubInstagramUrl}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="text-[11px] text-pink-600 hover:underline flex items-center gap-1 font-medium"
@@ -334,33 +359,31 @@ export const EventsFeed: React.FC<EventsFeedProps> = ({
                       )}
                     </button>
 
-                    {event.registrationUrl ? (
-                      <a
-                        href={event.registrationUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors shadow-sm"
-                      >
-                        RSVP / Info
-                        <ExternalLink className="w-3 h-3" />
-                      </a>
-                    ) : (
-                      <a
-                        href={event.instagramUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-semibold text-slate-700 bg-white border border-slate-200 hover:bg-slate-100 rounded-lg transition-colors"
-                      >
-                        IG Post
-                        <Instagram className="w-3 h-3 text-pink-600" />
-                      </a>
-                    )}
+                    <button
+                      type="button"
+                      onClick={() => setRegistrationEvent(event)}
+                      className={`inline-flex items-center gap-1 px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors shadow-sm ${
+                        registeredEventIds.has(event.id)
+                          ? 'text-emerald-800 bg-emerald-100 hover:bg-emerald-200'
+                          : 'text-white bg-blue-600 hover:bg-blue-700'
+                      }`}
+                    >
+                      {registeredEventIds.has(event.id) ? 'Registered' : 'RSVP'}
+                    </button>
                   </div>
                 </div>
               </div>
             );
           })}
         </div>
+      )}
+      {registrationEvent && (
+        <EventRegistrationModal
+          event={registrationEvent}
+          isRegistered={registeredEventIds.has(registrationEvent.id)}
+          onClose={() => setRegistrationEvent(null)}
+          onRegister={handleRegister}
+        />
       )}
     </div>
   );
