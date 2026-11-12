@@ -117,7 +117,7 @@ export const ClubsDirectory: React.FC<ClubsDirectoryProps> = ({
                       {club.shortName}
                     </h3>
                     <a
-                      href={club.instagram}
+                      href="https://www.instagram.com/"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-xs text-pink-600 hover:underline flex items-center gap-1 font-medium"

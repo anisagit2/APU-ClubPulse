@@ -15,7 +15,6 @@ import {
 import { CampusEvent, EventCategory } from '../types';
 import { downloadIcsFile, getGoogleCalendarUrl } from '../utils/calendar';
 import { EventRegistrationModal } from './EventRegistrationModal';
-import { APU_CLUBS } from '../data/clubsData';
 
 interface EventsFeedProps {
   events: CampusEvent[];
@@ -218,8 +217,6 @@ export const EventsFeed: React.FC<EventsFeedProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredEvents.map(event => {
             const isSaved = savedEventIds.has(event.id);
-            const clubInstagramUrl =
-              APU_CLUBS.find(club => club.id === event.clubId)?.instagram || event.instagramUrl;
 
             return (
               <div
@@ -238,7 +235,7 @@ export const EventsFeed: React.FC<EventsFeedProps> = ({
                           {event.clubName}
                         </span>
                         <a
-                          href={clubInstagramUrl}
+                          href="https://www.instagram.com/"
                           target="_blank"
                           rel="noopener noreferrer"
                           className="text-[11px] text-pink-600 hover:underline flex items-center gap-1 font-medium"

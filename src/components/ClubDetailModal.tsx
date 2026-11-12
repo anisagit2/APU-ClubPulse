@@ -44,7 +44,7 @@ export const ClubDetailModal: React.FC<ClubDetailModalProps> = ({
                 {club.name}
               </h2>
               <a
-                href={club.instagram}
+                href="https://www.instagram.com/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-xs text-pink-600 hover:underline flex items-center gap-1 font-medium mt-0.5"
@@ -176,7 +176,7 @@ export const ClubDetailModal: React.FC<ClubDetailModalProps> = ({
                         Calendar
                       </button>
                       <a
-                        href={evt.registrationUrl || evt.instagramUrl}
+                        href={evt.registrationUrl || 'https://www.instagram.com/'}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="px-3 py-1.5 text-xs font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors inline-flex items-center gap-1"
@@ -195,7 +195,7 @@ export const ClubDetailModal: React.FC<ClubDetailModalProps> = ({
         {/* Modal Footer */}
         <div className="p-4 bg-slate-50 border-t border-slate-100 flex items-center justify-between">
           <a
-            href={club.instagram}
+            href="https://www.instagram.com/"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1.5 text-xs font-semibold text-pink-600 hover:underline"
