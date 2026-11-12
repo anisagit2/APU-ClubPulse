@@ -2,6 +2,8 @@
 
 APU ClubPulse is a campus clubs and events hub for Asia Pacific University. Browse campus events, find clubs, take a club-matching quiz, and save events to your schedule.
 
+**Live site:** [apu-club-pulse.vercel.app](https://apu-club-pulse.vercel.app/)
+
 ## Features
 
 - Browse, search, and filter campus events.
@@ -46,15 +48,10 @@ npm run preview
 
 The production build is written to `dist/`.
 
-## Deploy to Vercel
+## Vercel deployment
 
-Import this repository into Vercel and use:
+The app is deployed at [https://apu-club-pulse.vercel.app/](https://apu-club-pulse.vercel.app/). Vercel can deploy updates automatically whenever changes are pushed to the connected Git branch.
 
-- **Framework preset:** Vite
-- **Build command:** `npm run build`
-- **Output directory:** `dist`
-
-Vercel can deploy automatically whenever changes are pushed to the connected Git branch.
 
 ## Tech stack
 
